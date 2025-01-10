@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const participantName = request.nextUrl.searchParams.get('participantName');
     const metadata = request.nextUrl.searchParams.get('metadata') ?? '';
     const region = request.nextUrl.searchParams.get('region');
-    const livekitServerUrl = region ? getLiveKitURL(region) : LIVEKIT_URL;
+    const livekitServerUrl = (region && getLiveKitURL(region)) || LIVEKIT_URL;
     if (livekitServerUrl === undefined) {
       throw new Error('Invalid region');
     }
@@ -68,14 +68,10 @@ function createParticipantToken(userInfo: AccessTokenOptions, roomName: string) 
 /**
  * Get the LiveKit server URL for the given region.
  */
-function getLiveKitURL(region: string | null): string {
+function getLiveKitURL(region: string | null): string | undefined {
   let targetKey = 'LIVEKIT_URL';
   if (region) {
     targetKey = `LIVEKIT_URL_${region}`.toUpperCase();
   }
-  const url = process.env[targetKey];
-  if (!url) {
-    throw new Error(`${targetKey} is not defined`);
-  }
-  return url;
+  return process.env[targetKey];
 }
