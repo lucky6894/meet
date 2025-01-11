@@ -65,8 +65,3 @@ h2 a {
 h2 a {
   text-decoration: none;
 }
-
-.lk-participant-media-video {
-  max-width: 512px;
-  max-height: 512px;
-}
